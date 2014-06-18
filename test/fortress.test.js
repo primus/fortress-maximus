@@ -57,17 +57,23 @@ describe('fortress maximus', function () {
         });
       });
 
+      primus.on('invalid', function (err, args) {
+        assume(err.message).to.contain('validator');
+        assume(args).to.be.a('array');
+        next();
+      });
+
       var client = new primus.Socket(http.url);
       client.emit('custom');
-
-      client.on('open', function () {
-        setTimeout(next, 100);
-      });
     });
 
     it('does emit the custom event if we have a validator succes', function (next) {
       primus.on('connection', function (spark) {
         spark.on('custom', next);
+      });
+
+      primus.on('invalid', function () {
+        throw new Error('Fucked');
       });
 
       primus.validate('custom', function (next) {
@@ -89,12 +95,73 @@ describe('fortress maximus', function () {
       primus.validate('custom', function (validates) {
         assume(validates).to.be.a('function');
         validates(new Error('failed'));
+      });
 
-        setTimeout(next, 100);
+      primus.on('invalid', function (err, args) {
+        assume(err.message).to.contain('failed');
+        assume(args).to.be.a('array');
+        next();
       });
 
       var client = new primus.Socket(http.url);
       client.emit('custom');
+    });
+
+    it('does emit an invalid event when were not listening', function (next) {
+      primus.validate('custom', function (validates) {
+        assume(validates).to.be.a('function');
+        validates();
+      });
+
+      primus.on('invalid', function (err, args) {
+        assume(err.message).to.contain('listen');
+        assume(args).to.be.a('array');
+        next();
+      });
+
+      var client = new primus.Socket(http.url);
+      client.emit('custom');
+    });
+
+    it('does emit an invalid event when args are mising', function (next) {
+      primus.on('connection', function (spark) {
+        spark.on('custom', function () {
+          throw new Error('I should have failed');
+        });
+      });
+
+      primus.validate('custom', function (foo, validates) {
+        assume(validates).to.be.a('function');
+        validates();
+      });
+
+      primus.on('invalid', function (err, args) {
+        assume(err.message).to.contain('arg');
+        assume(args).to.be.a('array');
+        next();
+      });
+
+      var client = new primus.Socket(http.url);
+      client.emit('custom');
+    });
+
+    it('receives the emitted args', function (next) {
+      primus.on('connection', function (spark) {
+        spark.on('custom', function (foo, bar) {
+          assume(foo).to.equal('bar');
+          assume(bar).to.equal('bar');
+          next();
+        });
+      });
+
+      primus.validate('custom', function (foo, bar, validates) {
+        assume(foo).to.equal('bar');
+        assume(bar).to.equal('bar');
+        validates();
+      });
+
+      var client = new primus.Socket(http.url);
+      client.emit('custom', 'foo', 'bar');
     });
   });
 });
