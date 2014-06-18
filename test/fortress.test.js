@@ -33,6 +33,10 @@ describe('fortress maximus', function () {
     assume(primus.validate).to.be.a('function');
   });
 
+  it('adds `invalid` as reserved event', function () {
+    assume(primus.reserved('invalid')).to.be.true();
+  });
+
   describe('.validate', function () {
     it('adds a new event listener', function () {
       assume(primus.listeners('fortress:maximus::data')).to.have.length(0);

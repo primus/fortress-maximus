@@ -3,6 +3,8 @@
 var fortress = module.exports;
 
 fortress.server = function server(primus, options) {
+  primus.reserved.events.invalid = 1;
+
   primus.transform('incoming', function incoming(packet, next) {
     var data = packet.data
       , normal = 'object' !== typeof data || !Array.isArray(data.emit)
@@ -20,13 +22,26 @@ fortress.server = function server(primus, options) {
     //
     // 1: The event we're about to emit shouldn't be reserved.
     //
-    if (!normal && this.reserved(event)) return next(undefined, false);
+    if (!normal && this.reserved(event)) {
+      primus.emit('invalid', new Error(event +' is a reserved event'), emit);
+      return next(undefined, false);
+    }
 
     //
-    // 2: We require all events to be validated, if we don't have a validator
+    // 2: If we don't have listeners for a given event we shouldn't be receiving
+    // it. Assume as invalid.
+    //
+    if (!this.listeners(event).length) {
+      primus.emit('invalid', new Error('Missing listener for '+ event), emit);
+      return next(undefined, false);
+    }
+
+    //
+    // 3: We require all events to be validated, if we don't have a validator
     // for the given event we will assume it's an attack and it will be ignored.
     //
-    if (!this.listeners(event).length || !primus.listeners(namespace).length) {
+    if (!primus.listeners(namespace).length) {
+      primus.emit('invalid', new Error('Missing validator for '+ event), emit);
       return next(undefined, false);
     }
 
@@ -50,11 +65,16 @@ fortress.server = function server(primus, options) {
       // received the expected amount of data. If we've receive to few or to
       // many events we know that this data is invalid and should be ignored.
       //
-      if (emit.length !== callback) return next(undefined, false);
+      if (emit.length !== callback) {
+        primus.emit('invalid', new Error('Missing arguments for '+ event), emit);
+        return next(undefined, false);
+      }
 
       emit.push(function validated(err) {
-        if (err) return next(undefined, false);
-        next();
+        if (!err) return next();
+
+        primus.emit('invalid', err, emit);
+        next(undefined, false);
       });
 
       validator.apply(primus, emit);
