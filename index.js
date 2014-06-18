@@ -5,16 +5,32 @@ var fortress = module.exports;
 fortress.server = function server(primus, options) {
   primus.transform('incoming', function incoming(packet, next) {
     var data = packet.data
-      , emit = 'object' !== typeof data || !Array.isArray(data.emit)
-        ? ['data', data]
-        : data.emit;
+      , normal = 'object' !== typeof data || !Array.isArray(data.emit)
+      , emit = normal ? ['data', data] : data.emit;
 
     //
-    // First step of validation, it shouldn't be reserved event.
+    // Pre-extract the event name as we don't need it in our argument validation
+    // as we already know which event we receive. And we need the event and
+    // namespace in order to validate that we actually have listeners for
+    // these events as we will ignore the message if we don't
     //
-    if (this.reserved(data.emit[0])) return next(undefined, false);
+    var event = emit.shift()
+      , namespace = 'fortress:maximus::'+ event;
 
-    primus.emit('fortress:maximus::'+ packet.emit[0], emit, next);
+    //
+    // 1: The event we're about to emit shouldn't be reserved.
+    //
+    if (!normal && this.reserved(event)) return next(undefined, false);
+
+    //
+    // 2: We require all events to be validated, if we don't have a validator
+    // for the given event we will assume it's an attack and it will be ignored.
+    //
+    if (!this.listeners(event).length || !primus.listeners(namespace).length) {
+      return next(undefined, false);
+    }
+
+    primus.emit(namespace, emit, next);
   });
 
   /**
@@ -28,8 +44,6 @@ fortress.server = function server(primus, options) {
     var callback = validator.length - 1;
 
     primus.on('fortress:maximus::'+ event, function validates(emit, next) {
-      var event = emit.shift();
-
       //
       // This is the first step of validation, we want to make sure that we've
       // received the expected amount of data. If we've receive to few or to
