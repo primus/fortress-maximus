@@ -6,7 +6,7 @@ fortress.server = function server(primus, options) {
   primus.transform('incoming', function incoming(packet, next) {
     var data = packet.data
       , normal = 'object' !== typeof data || !Array.isArray(data.emit)
-      , emit = normal ? ['data', data] : data.emit;
+      , emit = (normal ? ['data', data] : data.emit).slice(0);
 
     //
     // Pre-extract the event name as we don't need it in our argument validation
