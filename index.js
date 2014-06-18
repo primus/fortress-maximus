@@ -41,9 +41,10 @@ fortress.server = function server(primus, options) {
    * @api public
    */
   primus.validate = function validate(event, validator) {
-    var callback = validator.length - 1;
+    var namespace = 'fortress:maximus::'+ event
+      , callback = validator.length - 1;
 
-    primus.on('fortress:maximus::'+ event, function validates(emit, next) {
+    primus.on(namespace, function validates(emit, next) {
       //
       // This is the first step of validation, we want to make sure that we've
       // received the expected amount of data. If we've receive to few or to
@@ -58,5 +59,10 @@ fortress.server = function server(primus, options) {
 
       validator.apply(primus, emit);
     });
+
+    //
+    // Register as reserved event so plugins cannot emit this.
+    //
+    primus.reserved.events[namespace] = 1;
   };
 };

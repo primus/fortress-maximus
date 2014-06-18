@@ -40,6 +40,12 @@ describe('fortress maximus', function () {
       assume(primus.listeners('fortress:maximus::data')).to.have.length(1);
     });
 
+    it('adds it as a private event', function () {
+      assume(primus.reserved('fortress:maximus::ihavenolife')).to.equal(false);
+      primus.validate('ihavenolife', function (data, callback) {});
+      assume(primus.reserved('fortress:maximus::ihavenolife')).to.equal(true);
+    });
+
     it('does not emit an custom event if there are no validators', function (next) {
       primus.on('connection', function (spark) {
         spark.on('custom', function () {
