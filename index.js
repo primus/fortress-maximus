@@ -53,14 +53,6 @@ fortress.server = function server(primus, options) {
 
       emit.push(function validated(err) {
         if (err) return next(undefined, false);
-
-        //
-        // Re-add the original emitted event again and remove our added callback
-        // function which we are currently executing in.
-        //
-        emit.unshift(event);
-        emit.pop();
-
         next();
       });
 
