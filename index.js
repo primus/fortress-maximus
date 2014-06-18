@@ -3,8 +3,15 @@
 var fortress = module.exports;
 
 fortress.server = function server(primus, options) {
+  //
+  // Register the `invalid` event, which we emit when we receive invalid and
+  // unvalidated data.
+  //
   primus.reserved.events.invalid = 1;
 
+  //
+  // Transform the incoming messages so we can intercept and deny them.
+  //
   primus.transform('incoming', function incoming(packet, next) {
     var data = packet.data
       , normal = 'object' !== typeof data || !Array.isArray(data.emit)
