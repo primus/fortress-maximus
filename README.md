@@ -142,4 +142,4 @@ primus.on('invalid', function invalid(err, args) {
 
 MIT
 
-<img src="https://raw.githubusercontent.com/primus/fortress-maximus/master/logo.jpg" align="right" />
+![Fortress Maximus](https://raw.githubusercontent.com/primus/fortress-maximus/master/logo.jpg)
