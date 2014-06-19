@@ -3,6 +3,23 @@
 var fortress = module.exports;
 
 fortress.server = function server(primus, options) {
+  /**
+   * The incoming message is invalid.
+   *
+   * @param {Error} err Validation error
+   * @param {String} event Name of the event we've validated.
+   * @param {Array} args The arguments we've validated.
+   * @api private
+   */
+  function invalid(err, event, args) {
+    if ('string' === typeof err) {
+      err = new Error(err);
+    }
+
+    err.event = event;
+    primus.emit('invalid', err, args);
+  }
+
   //
   // Register the `invalid` event, which we emit when we receive invalid and
   // unvalidated data.
@@ -30,7 +47,7 @@ fortress.server = function server(primus, options) {
     // 1: The event we're about to emit shouldn't be reserved.
     //
     if (!normal && this.reserved(event)) {
-      primus.emit('invalid', new Error(event +' is a reserved event'), emit);
+      invalid(new Error(event +' is a reserved event'), event, emit);
       return next(undefined, false);
     }
 
@@ -39,7 +56,7 @@ fortress.server = function server(primus, options) {
     // it. Assume as invalid.
     //
     if (!this.listeners(event).length) {
-      primus.emit('invalid', new Error('Missing listener for '+ event), emit);
+      invalid(new Error('Missing listener for '+ event), event, emit);
       return next(undefined, false);
     }
 
@@ -48,11 +65,11 @@ fortress.server = function server(primus, options) {
     // for the given event we will assume it's an attack and it will be ignored.
     //
     if (!primus.listeners(namespace).length) {
-      primus.emit('invalid', new Error('Missing validator for '+ event), emit);
+      invalid(new Error('Missing validator for '+ event), event, emit);
       return next(undefined, false);
     }
 
-    primus.emit(namespace, emit, next);
+    primus.emit(namespace, emit, this, next);
   });
 
   /**
@@ -66,25 +83,25 @@ fortress.server = function server(primus, options) {
     var namespace = 'fortress:maximus::'+ event
       , callback = validator.length - 1;
 
-    primus.on(namespace, function validates(emit, next) {
+    primus.on(namespace, function validates(emit, spark, next) {
       //
-      // This is the first step of validation, we want to make sure that we've
+      // 4: This is the last step of validation, we want to make sure that we've
       // received the expected amount of data. If we've receive to few or to
       // many events we know that this data is invalid and should be ignored.
       //
       if (emit.length !== callback) {
-        primus.emit('invalid', new Error('Missing arguments for '+ event), emit);
+        invalid(new Error('Missing arguments for '+ event), event, emit);
         return next(undefined, false);
       }
 
       emit.push(function validated(err) {
         if (!err) return next();
 
-        primus.emit('invalid', err, emit);
+        invalid(err, event, emit);
         next(undefined, false);
       });
 
-      validator.apply(primus, emit);
+      validator.apply(spark, emit);
     });
 
     //

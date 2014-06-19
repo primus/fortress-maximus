@@ -137,6 +137,7 @@ describe('fortress maximus', function () {
 
       primus.on('invalid', function (err, args) {
         assume(err.message).to.contain('arg');
+        assume(err.event).to.equal('custom');
         assume(args).to.be.a('array');
         next();
       });
@@ -148,16 +149,47 @@ describe('fortress maximus', function () {
     it('receives the emitted args', function (next) {
       primus.on('connection', function (spark) {
         spark.on('custom', function (foo, bar) {
-          assume(foo).to.equal('bar');
+          assume(foo).to.equal('foo');
           assume(bar).to.equal('bar');
           next();
         });
       });
 
       primus.validate('custom', function (foo, bar, validates) {
-        assume(foo).to.equal('bar');
+        assume(foo).to.equal('foo');
         assume(bar).to.equal('bar');
         validates();
+      });
+
+      var client = new primus.Socket(http.url);
+      client.emit('custom', 'foo', 'bar');
+    });
+
+    it('is called with the spark as context', function (next) {
+      var validates = 0
+        , sparky;
+
+      primus.on('connection', function (spark) {
+        sparky = spark;
+        spark.foo = 'bar';
+
+        spark.on('custom', function (foo, bar) {
+          assume(foo).to.equal('foo');
+          assume(bar).to.equal('bar');
+          assume(validates).to.equal(1);
+
+          next();
+        });
+      });
+
+      primus.validate('custom', function (foo, bar, valid) {
+        assume(this.foo).equals('bar');
+        assume(this).equals(sparky);
+        assume(foo).to.equal('foo');
+        assume(bar).to.equal('bar');
+
+        validates++;
+        valid();
       });
 
       var client = new primus.Socket(http.url);
