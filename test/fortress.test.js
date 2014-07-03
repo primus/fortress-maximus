@@ -146,6 +146,28 @@ describe('fortress maximus', function () {
       client.emit('custom');
     });
 
+    it('does set a custom error when we validate using false/true', function (next) {
+      primus.on('connection', function (spark) {
+        spark.on('custom', function () {
+          throw new Error('I should have failed');
+        });
+      });
+
+      primus.validate('custom', function (validates) {
+        validates(false);
+      });
+
+      primus.on('invalid', function (err, args) {
+        assume(err.message).to.contain('custom');
+        assume(err.event).to.equal('custom');
+        assume(args).to.be.a('array');
+        next();
+      });
+
+      var client = new primus.Socket(http.url);
+      client.emit('custom');
+    });
+
     it('receives the emitted args', function (next) {
       primus.on('connection', function (spark) {
         spark.on('custom', function (foo, bar) {

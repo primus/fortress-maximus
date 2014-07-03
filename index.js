@@ -3,6 +3,8 @@
 var fortress = module.exports;
 
 fortress.server = function server(primus, options) {
+  var eventemitter = options.fortress || 'spark';
+
   /**
    * The incoming message is invalid.
    *
@@ -31,6 +33,7 @@ fortress.server = function server(primus, options) {
   //
   primus.transform('incoming', function incoming(packet, next) {
     var data = packet.data
+      , emitter = eventemitter === 'spark' ? this : primus
       , normal = 'object' !== typeof data || !Array.isArray(data.emit)
       , emit = (normal ? ['data', data] : data.emit).slice(0);
 
@@ -46,7 +49,7 @@ fortress.server = function server(primus, options) {
     //
     // 1: The event we're about to emit shouldn't be reserved.
     //
-    if (!normal && this.reserved(event)) {
+    if (!normal && emitter.reserved(event)) {
       invalid(new Error(event +' is a reserved event'), event, emit);
       return next(undefined, false);
     }
@@ -55,7 +58,7 @@ fortress.server = function server(primus, options) {
     // 2: If we don't have listeners for a given event we shouldn't be receiving
     // it. Assume as invalid.
     //
-    if (!this.listeners(event).length) {
+    if (!emitter.listeners(event).length) {
       invalid(new Error('Missing listener for '+ event), event, emit);
       return next(undefined, false);
     }
@@ -95,7 +98,8 @@ fortress.server = function server(primus, options) {
       }
 
       emit.push(function validated(err) {
-        if (!err) return next();
+        if (err === false) err = new Error(event +' did not validate');
+        if (!err || err === true) return next();
 
         invalid(err, event, emit);
         next(undefined, false);
