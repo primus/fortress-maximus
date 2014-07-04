@@ -52,7 +52,24 @@ primus.use('fortress maximus', require('fortress-maximus'))
 
 In the example code above we can successfully intercept emit messages and
 validate them before they are processed by the `primus-emit` plugin and emitted
-on the spark instance.
+on the spark instance. The `primus-emit` module has two different modes which
+configure on where the events are emitted.. On the spark or on the server. We
+need to know where so we can correctly validate that there are events registered
+for it. That's why it's possible to configure the `fortress-maximus` module
+directly through the Primus server constructor. The following options are
+available:
+
+- `fortress`: Where are the events emitted. Either `spark` or `primus`. Defaults
+  to `spark`.
+
+Just as a quick reminder, this is how you supply the options to your Primus
+server:
+
+```js
+var primus = new Primus(httpsserver, {
+  fortress: 'spark'
+});
+```
 
 ## Validating
 
@@ -110,6 +127,16 @@ primus.validate('admin', function validate(notification, next) {
 
     next();
   }):
+});
+```
+
+If you are to lazy to create `new Error()` objects for every single validation
+you can also call the validation function with a boolean `true` and `false` to
+indicate if the event is valid.
+
+```js
+primus.validate('custom event', function validate(foo, bar, next) {
+  next(foo !== 'bar' && bar !== 'foo');
 });
 ```
 
