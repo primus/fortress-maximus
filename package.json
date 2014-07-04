@@ -1,6 +1,6 @@
 {
   "name": "fortress-maximus",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Despite his great power, size, and rank, Fortress Maximus is a weary and reluctant warrior. Fighting is against his pacifist nature and now spends his time validating.",
   "main": "index.js",
   "scripts": {
