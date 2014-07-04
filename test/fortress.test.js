@@ -38,6 +38,10 @@ describe('fortress maximus', function () {
   });
 
   describe('.validate', function () {
+    it('returns this', function () {
+      assume(primus.validate('data', function (msg, callback) {})).to.equal(primus);
+    });
+
     it('adds a new event listener', function () {
       assume(primus.listeners('fortress:maximus::data')).to.have.length(0);
       primus.validate('data', function (msg, callback) {});

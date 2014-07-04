@@ -80,6 +80,7 @@ fortress.server = function server(primus, options) {
    *
    * @param {String} event The incoming event we need to validate.
    * @param {Function} validator Function that validates.
+   * @returns {Primus} The server for chaining
    * @api public
    */
   primus.validate = function validate(event, validator) {
@@ -112,5 +113,7 @@ fortress.server = function server(primus, options) {
     // Register as reserved event so plugins cannot emit this.
     //
     primus.reserved.events[namespace] = 1;
+
+    return primus;
   };
 };
