@@ -1,6 +1,7 @@
 'use strict';
 
-var fortress = module.exports;
+var debug = require('diagnostics')('primus:fortress')
+  , fortress = module.exports;
 
 fortress.server = function server(primus, options) {
   var eventemitter = options.fortress || 'spark';
@@ -14,11 +15,10 @@ fortress.server = function server(primus, options) {
    * @api private
    */
   function invalid(err, event, args) {
-    if ('string' === typeof err) {
-      err = new Error(err);
-    }
+    if ('string' === typeof err) err = new Error(err);
 
     err.event = event;
+    debug('invalid '+ event +':'+ err.message);
     primus.emit('invalid', err, args);
   }
 

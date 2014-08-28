@@ -165,6 +165,15 @@ primus.on('invalid', function invalid(err, args) {
 });
 ```
 
+## Debug
+
+In addition to the `invalid` event, we also log the error with the `diagnostics`
+module. These debug messages can seen by setting the environment variable `DEBUG`:
+
+```
+DEBUG=primus:fortress node <your app.js>
+```
+
 ## License
 
 MIT
