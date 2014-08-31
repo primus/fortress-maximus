@@ -1,4 +1,7 @@
-# fortress maximus [![Build Status](https://travis-ci.org/primus/fortress-maximus.svg?branch=master)](https://travis-ci.org/primus/fortress-maximus)
+# fortress maximus
+
+[![Build Status](https://travis-ci.org/primus/fortress-maximus.svg?branch=master)](https://travis-ci.org/primus/fortress-maximus)
+[![NPM version](https://badge.fury.io/js/fortress-maximus.svg)](http://badge.fury.io/js/fortress-maximus)
 
 Despite his great power, size, and rank, Fortress Maximus is a weary and
 reluctant warrior. Fighting is against his pacifist nature and now spends his
