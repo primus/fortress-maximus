@@ -127,6 +127,26 @@ describe('fortress maximus', function () {
       client.emit('custom');
     });
 
+    it('does emit an invalid event when were not listening (write)', function (next) {
+      var validated = false;
+
+      primus.validate('data', function (validates) {
+        assume(validates).to.be.a('function');
+        validated = true;
+        validates();
+      });
+
+      primus.on('invalid', function (err, args) {
+        assume(err.message).to.contain('data');
+        assume(args).is.a('array');
+        assume(validated).is.true();
+        next();
+      });
+
+      var client = new primus.Socket(http.url);
+      client.write('data');
+    });
+
     it('does emit an invalid event when args are mising', function (next) {
       primus.on('connection', function (spark) {
         spark.on('custom', function () {
