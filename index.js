@@ -41,7 +41,7 @@ fortress.server = function server(primus, options) {
     // Pre-extract the event name as we don't need it in our argument validation
     // as we already know which event we receive. And we need the event and
     // namespace in order to validate that we actually have listeners for
-    // these events as we will ignore the message if we don't
+    // these events as we will ignore the message if we don't.
     //
     var event = emit.shift()
       , namespace = 'fortress:maximus::'+ event;
@@ -90,7 +90,7 @@ fortress.server = function server(primus, options) {
     primus.on(namespace, function validates(emit, spark, next) {
       //
       // 4: This is the last step of validation, we want to make sure that we've
-      // received the expected amount of data. If we've receive to few or to
+      // received the expected amount of data. If we've received too few or too
       // many events we know that this data is invalid and should be ignored.
       //
       if (emit.length !== callback) {
@@ -102,7 +102,7 @@ fortress.server = function server(primus, options) {
         if (err === false) err = new Error(event +' did not validate');
         if (!err || err === true) return next();
 
-        invalid(err, event, emit);
+        invalid(err, event, emit.slice(0, -1));
         next(undefined, false);
       });
 
