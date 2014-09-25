@@ -111,12 +111,7 @@ describe('fortress maximus', function () {
       client.emit('custom');
     });
 
-    it('does emit an invalid event when were not listening', function (next) {
-      primus.validate('custom', function (validates) {
-        assume(validates).to.be.a('function');
-        validates();
-      });
-
+    it('does emit an invalid event when we\'re not listening', function (next) {
       primus.on('invalid', function (err, args) {
         assume(err.message).to.contain('listen');
         assume(args).to.be.a('array');
@@ -127,19 +122,10 @@ describe('fortress maximus', function () {
       client.emit('custom');
     });
 
-    it('does emit an invalid event when were not listening (write)', function (next) {
-      var validated = false;
-
-      primus.validate('data', function (validates) {
-        assume(validates).to.be.a('function');
-        validated = true;
-        validates();
-      });
-
+    it('does emit an invalid event when we\'re not listening (write)', function (next) {
       primus.on('invalid', function (err, args) {
         assume(err.message).to.contain('data');
         assume(args).is.a('array');
-        assume(validated).is.true();
         next();
       });
 
