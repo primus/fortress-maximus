@@ -3,7 +3,7 @@ describe('fortress maximus', function () {
 
   var assume = require('assume')
     , Primus = require('primus')
-    , fortress = require('../');
+    , fortress = require('./');
 
   var port = 1024
     , primus

@@ -4,7 +4,7 @@
   "description": "Despite his great power, size, and rank, Fortress Maximus is a weary and reluctant warrior. Fighting is against his pacifist nature and now spends his time validating.",
   "main": "index.js",
   "scripts": {
-    "test": "mocha $(find test -name '*.test.js')"
+    "test": "mocha --reporter spec test.js"
   },
   "repository": {
     "type": "git",
