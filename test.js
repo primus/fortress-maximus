@@ -1,3 +1,4 @@
+/* istanbul ignore next */
 describe('fortress maximus', function () {
   'use strict';
 

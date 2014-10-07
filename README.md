@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/primus/fortress-maximus.svg?branch=master)](https://travis-ci.org/primus/fortress-maximus)
 [![NPM version](https://badge.fury.io/js/fortress-maximus.svg)](http://badge.fury.io/js/fortress-maximus)
+[![Coverage Status](https://img.shields.io/coveralls/primus/fortress-maximus.svg)](https://coveralls.io/r/primus/fortress-maximus?branch=master)
 
 Despite his great power, size, and rank, Fortress Maximus is a weary and
 reluctant warrior. Fighting is against his pacifist nature and now spends his
