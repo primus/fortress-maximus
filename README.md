@@ -57,7 +57,7 @@ primus.use('fortress maximus', require('fortress-maximus'))
 In the example code above we can successfully intercept emit messages and
 validate them before they are processed by the `primus-emit` plugin and emitted
 on the spark instance. The `primus-emit` module has two different modes which
-configure on where the events are emitted.. On the spark or on the server. We
+configure on where the events are emitted. On the spark or on the server. We
 need to know where so we can correctly validate that there are events registered
 for it. That's why it's possible to configure the `fortress-maximus` module
 directly through the Primus server constructor. The following options are
