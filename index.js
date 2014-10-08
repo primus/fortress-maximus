@@ -72,7 +72,7 @@ fortress.server = function server(primus, options) {
       return next(undefined, false);
     }
 
-    primus.emit(namespace, emit, this, next);
+    primus.emit(namespace, emit, emitter, next);
   });
 
   /**
