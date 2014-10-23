@@ -18,7 +18,7 @@ user input should be seen as a potential security risk.
 
 ## Installation
 
-This a plugin for the Primus framework and can be installed using `npm`:
+This is a plugin for the Primus framework and can be installed using `npm`:
 
 ```
 npm install --save fortress-maximus
