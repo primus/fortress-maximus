@@ -32,11 +32,11 @@
     "istanbul": "0.3.x",
     "mocha": "2.2.x",
     "pre-commit": "1.0.x",
-    "primus": "3.0.x",
+    "primus": "3.1.x",
     "primus-emit": "0.1.x",
     "ws": "0.7.x"
   },
   "dependencies": {
-    "diagnostics": "0.0.x"
+    "diagnostics": "1.0.x"
   }
 }
