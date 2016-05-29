@@ -1,6 +1,6 @@
 # fortress maximus
 
-[![Version npm](http://img.shields.io/npm/v/fortress-maximus.svg?style=flat-square)](http://browsenpm.org/package/fortress-maximus)[![Build Status](http://img.shields.io/travis/primus/fortress-maximus/master.svg?style=flat-square)](https://travis-ci.org/primus/fortress-maximus)[![Dependencies](https://img.shields.io/david/primus/fortress-maximus.svg?style=flat-square)](https://david-dm.org/primus/fortress-maximus)[![Coverage Status](http://img.shields.io/coveralls/primus/fortress-maximus/master.svg?style=flat-square)](https://coveralls.io/r/primus/fortress-maximus?branch=master)[![IRC channel](http://img.shields.io/badge/IRC-irc.freenode.net%23primus-00a8ff.svg?style=flat-square)](http://webchat.freenode.net/?channels=primus)
+[![Version npm](https://img.shields.io/npm/v/fortress-maximus.svg?style=flat-square)](http://browsenpm.org/package/fortress-maximus)[![Build Status](https://img.shields.io/travis/primus/fortress-maximus/master.svg?style=flat-square)](https://travis-ci.org/primus/fortress-maximus)[![Dependencies](https://img.shields.io/david/primus/fortress-maximus.svg?style=flat-square)](https://david-dm.org/primus/fortress-maximus)[![Coverage Status](https://img.shields.io/coveralls/primus/fortress-maximus/master.svg?style=flat-square)](https://coveralls.io/r/primus/fortress-maximus?branch=master)[![IRC channel](https://img.shields.io/badge/IRC-irc.freenode.net%23primus-00a8ff.svg?style=flat-square)](https://webchat.freenode.net/?channels=primus)
 
 Despite his great power, size, and rank, Fortress Maximus is a weary and
 reluctant warrior. Fighting is against his pacifist nature and now spends his
@@ -29,12 +29,12 @@ package.json.
 
 In order to work with emitted events we assume that you're using the
 `primus-emit` module as emit plugin. Any other plugin will simply be seen and
-validated as `data` event. See http://github.com/primus/emit for more
+validated as `data` event. See https://github.com/primus/emit for more
 information about this supported plugin.
 
 ## Usage
 
-As this a plugin for Primus we need to add it. This plugin only has a server
+As this is a plugin for Primus we need to add it. This plugin only has a server
 component so it doesn't require you to re-compile your client. To add this
 plugin to your Primus server simply call the `.use` method on your Primus
 instance:
@@ -43,7 +43,6 @@ instance:
 primus.use('fortress maximus', require('fortress-maximus'));
 ```
 
-And you're server will now require validation for every single incoming message.
 If you want every single message to be validated make sure that you've added
 `fortress-maximus` as the first plugin you use:
 
@@ -55,14 +54,14 @@ primus.use('fortress maximus', require('fortress-maximus'))
 In the example code above we can successfully intercept emit messages and
 validate them before they are processed by the `primus-emit` plugin and emitted
 on the spark instance. The `primus-emit` module has two different modes which
-configure on where the events are emitted. On the spark or on the server. We
-need to know where so we can correctly validate that there are events registered
+configure where the events are emitted. On the spark or on the server. We need
+to know where so we can correctly validate that there are events registered
 for it. That's why it's possible to configure the `fortress-maximus` module
 directly through the Primus server constructor. The following options are
 available:
 
-- `fortress`: Where are the events emitted. Either `spark` or `primus`. Defaults
-  to `spark`.
+- `fortress`: Where the events are emitted. Either `spark` or `primus`.
+  Defaults to `spark`.
 
 Just as a quick reminder, this is how you supply the options to your Primus
 server:
@@ -75,7 +74,7 @@ var primus = new Primus(httpsserver, {
 
 ## Validating
 
-After you've added the plugin you can the newly introduced `primus.validate`
+After you've added the plugin you can use the newly introduced `primus.validate`
 method to add validators for any given event that is emitted on the spark. The
 validate method accepts 2 arguments:
 
@@ -98,8 +97,8 @@ primus.validate('data', function (msg, next) {
 })
 ```
 
-When we receive a new message on the server we first run some standard checks to
-see if we've received validate data and we:
+When we receive a new message on the server we first run some standard
+validation checks to:
 
 1. Prevent reserved events from being emitted.
 2. Only allow events to be emitted when there are listeners.
@@ -118,8 +117,8 @@ primus.validate('custom event', function validate(foo, bar, next) {
 });
 ```
 
-The context of you validate function will be set to the `spark` so you could do
-some additional validation based on that:
+The context of your validator function will be set to the `spark` so you could
+do some additional validation based on that:
 
 ```js
 primus.validate('admin', function validate(notification, next) {
@@ -132,8 +131,8 @@ primus.validate('admin', function validate(notification, next) {
 });
 ```
 
-If you are to lazy to create `new Error()` objects for every single validation
-you can also call the validation function with a boolean `true` and `false` to
+If you are too lazy to create `new Error()` objects for every single validation
+you can also call the callback function with a boolean (`true` or `false`) to
 indicate if the event is valid.
 
 ```js
@@ -144,11 +143,10 @@ primus.validate('custom event', function validate(foo, bar, next) {
 
 ## Invalid
 
-When ever we fail to validate an incoming message we will prevent it from being
-emitted. And will emit an `invalid` event on your Primus server instance. This
-invalid event receives 2 arguments:
+When validation fails an `invalid` event is emitted on your Primus server
+instance. This `invalid` event receives 2 arguments:
 
-1. `err` An error instance explaining why the given message was invalid
+1. `err` An error instance explaining why the given message was invalid.
 2. `args` The arguments that we attempted to validate.
 
 ```js
@@ -157,9 +155,9 @@ primus.on('invalid', function invalid(err, args) {
 });
 ```
 
-To figure out which event we've validated you can check the supplied error
-object. We add an `event` property on it with the name of the event we've failed
-to validate.
+To figure out which was the event that did not pass validation you can check
+the supplied error object. We add an `event` property to it with the name of
+the event.
 
 ```js
 primus.on('invalid', function invalid(err, args) {
@@ -170,7 +168,8 @@ primus.on('invalid', function invalid(err, args) {
 ## Debug
 
 In addition to the `invalid` event, we also log the error with the `diagnostics`
-module. These debug messages can seen by setting the environment variable `DEBUG`:
+module. These debug messages can be seen by setting the environment variable
+`DEBUG`:
 
 ```
 DEBUG=primus:fortress node <your app.js>
@@ -178,6 +177,6 @@ DEBUG=primus:fortress node <your app.js>
 
 ## License
 
-MIT
+[MIT](LICENSE)
 
 ![Fortress Maximus](https://raw.githubusercontent.com/primus/fortress-maximus/master/logo.jpg)
