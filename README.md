@@ -36,19 +36,19 @@ information about this supported plugin.
 
 As this is a plugin for Primus we need to add it. This plugin only has a server
 component so it doesn't require you to re-compile your client. To add this
-plugin to your Primus server simply call the `.use` method on your Primus
+plugin to your Primus server simply call the `.plugin` method on your Primus
 instance:
 
 ```js
-primus.use('fortress maximus', require('fortress-maximus'));
+primus.plugin('fortress maximus', require('fortress-maximus'));
 ```
 
 If you want every single message to be validated make sure that you've added
 `fortress-maximus` as the first plugin you use:
 
 ```js
-primus.use('fortress maximus', require('fortress-maximus'))
-      .use('emit', require('primus-emit'));
+primus.plugin('fortress maximus', require('fortress-maximus'))
+      .plugin('emit', require('primus-emit'));
 ```
 
 In the example code above we can successfully intercept emit messages and
