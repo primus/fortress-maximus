@@ -18,8 +18,8 @@ describe('fortress maximus', function () {
       transformer: 'websockets'
     });
 
-    primus.use('fortess maximus', fortress);
-    primus.use('emit', emit);
+    primus.plugin('fortess maximus', fortress);
+    primus.plugin('emit', emit);
 
     http.port = port++;
     http.url = 'http://localhost:'+ http.port;
@@ -42,8 +42,8 @@ describe('fortress maximus', function () {
   it('emits an invalid event when the event to emit is reserved', function (next) {
     var primus = new Primus(http, { fortress: 'primus' });
 
-    primus.use('fortess maximus', fortress);
-    primus.use('emit', emit);
+    primus.plugin('fortess maximus', fortress);
+    primus.plugin('emit', emit);
 
     primus.on('invalid', function (err, args) {
       assume(err.message).to.contain('reserved');
@@ -273,8 +273,8 @@ describe('fortress maximus', function () {
         , validates = 0
         , sparky;
 
-      primus.use('fortess maximus', fortress);
-      primus.use('emit', require('primus-emit/broadcast'));
+      primus.plugin('fortess maximus', fortress);
+      primus.plugin('emit', require('primus-emit/broadcast'));
 
       primus.on('connection', function (spark) {
         sparky = spark;
