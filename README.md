@@ -1,6 +1,6 @@
 # fortress maximus
 
-[![Version npm](https://img.shields.io/npm/v/fortress-maximus.svg?style=flat-square)](https://www.npmjs.com/package/fortress-maximus)[![Build Status](https://img.shields.io/github/workflow/status/primus/fortress-maximus/CI/master?label=CI&style=flat-square)](https://github.com/primus/fortress-maximus/actions?query=workflow%3ACI+branch%3Amaster)[![Dependencies](https://img.shields.io/david/primus/fortress-maximus.svg?style=flat-square)](https://david-dm.org/primus/fortress-maximus)[![Coverage Status](https://img.shields.io/coveralls/primus/fortress-maximus/master.svg?style=flat-square)](https://coveralls.io/r/primus/fortress-maximus?branch=master)[![IRC channel](https://img.shields.io/badge/IRC-irc.freenode.net%23primus-00a8ff.svg?style=flat-square)](https://webchat.freenode.net/?channels=primus)
+[![Version npm](https://img.shields.io/npm/v/fortress-maximus.svg?style=flat-square)](https://www.npmjs.com/package/fortress-maximus)[![Build Status](https://img.shields.io/github/workflow/status/primus/fortress-maximus/CI/master?label=CI&style=flat-square)](https://github.com/primus/fortress-maximus/actions?query=workflow%3ACI+branch%3Amaster)[![Coverage Status](https://img.shields.io/coveralls/primus/fortress-maximus/master.svg?style=flat-square)](https://coveralls.io/r/primus/fortress-maximus?branch=master)
 
 Despite his great power, size, and rank, Fortress Maximus is a weary and
 reluctant warrior. Fighting is against his pacifist nature and now spends his
